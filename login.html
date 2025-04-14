@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .menu-bar {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            background-color: #333;
+            padding: 10px 0;
+        }
+
+        .menu-bar li {
+            margin: 0 15px;
+        }
+
+        .menu-bar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .menu-bar a:hover {
+            background-color: #575757;
+            border-radius: 5px;
+        }
+
+        .login-container {
+            margin-top: 100px; /* Adjusted for menu bar spacing */
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 30px;
+            width: 300px;
+            text-align: center;
+        }
+
+        .login-container h2 {
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .login-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .login-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .login-container button:hover {
+            background-color: #45a049;
+        }
+
+        .login-container a {
+            display: block;
+            margin-top: 10px;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .login-container a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .menu-bar {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .menu-bar li {
+                margin: 5px 0;
+            }
+
+            .login-container {
+                width: 90%;
+                padding: 20px;
+            }
+        }
+
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            display: none; /* Initially hidden */
+        }
+
+        .chatbot-header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .chatbot-messages {
+            flex: 1
+            padding: 10px;
+            overflow-y: auto;
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .chatbot-input {
+            display: flex;
+            border-top: 1px solid #ddd;
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .chatbot-input button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .chatbot-input button:hover {
+            background-color: #45a049;
+        }
+
+        .chatbot-options {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+
+        .chatbot-options button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .chatbot-options button:hover {
+            background-color: #45a049;
+        }
+
+        .chatbot-notification {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            font-size: 14px;
+            display: none;
+            animation: slide-in 0.5s forwards;
+        }
+
+        @keyframes slide-in {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .chatbot-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 12px; /* Reduced padding for a smaller, compact button */
+            border-radius: 50%; /* Circular button for a modern look */
+            cursor: pointer;
+            font-size: 14px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .chatbot-toggle:hover {
+            background-color: #45a049;
+            transform: scale(1.1); /* Slight zoom effect on hover */
+        }
+
+        .cookies-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: slide-up 0.5s ease-out;
+        }
+
+        .cookies-bar button {
+            margin-left: 10px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .cookies-bar .accept {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .cookies-bar .decline {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .cookies-bar .accept:hover {
+            background-color: #45a049;
+        }
+
+        .cookies-bar .decline:hover {
+            background-color: #d32f2f;
+        }
+
+        @keyframes slide-up {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <ul class="menu-bar">
+            <li><a href="#markets">Markets</a></li>
+            <li><a href="#indices">Indices</a></li>
+            <li><a href="#shares">Shares</a></li>
+            <li><a href="#cryptocurrency">Cryptocurrency</a></li>
+            <li><a href="#forex">Forex</a></li>
+            <li><a href="#commodities">Commodities</a></li>
+            <li><a href="#etfs">ETFs</a></li>
+            <li><a href="#funds">Funds</a></li>
+            <li><a href="#bonds">Bonds</a></li>
+            <li><a href="#certificates">Certificates</a></li>
+            <li><a href="#my-watchlist">My Watchlist</a></li>
+            <li><a href="#investing-challenges">Investing Challenges</a></li>
+            <li><a href="#charts">Charts</a></li>
+            <li><a href="#news">News</a></li>
+            <li><a href="#analysis">Analysis</a></li>
+            <li><a href="#technical">Technical</a></li>
+            <li><a href="#brokers">Brokers</a></li>
+            <li><a href="#tools">Tools</a></li>
+            <li><a href="#academy">Academy</a></li>
+            <li><a href="#stock-screener">Stock Screener</a></li>
+            <li><a href="#economic-calendar">Economic Calendar</a></li>
+            <li><a href="https://www.yahoo.com" target="_blank">More</a></li>
+        </ul>
+    </header>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form onsubmit="return validateLoginForm()">
+            <input type="text" placeholder="Username" required>
+            <input type="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+        <a href="forgot_password.html">Forgot Password?</a>
+    </div>
+
+    <div class="chatbot-container">
+        <div class="chatbot-header">Chatbot</div>
+        <div class="chatbot-messages" id="chatbotMessages">
+            <!-- Chat messages will appear here -->
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="chatbotInput" placeholder="Type a message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+        <div class="chatbot-options">
+            <button onclick="chatbotOption('How to log in?')">How to Log In</button>
+            <button onclick="chatbotOption('How to log out?')">How to Log Out</button>
+            <button onclick="chatbotOption('How to reset password?')">How to Forgot Password</button>
+        </div>
+    </div>
+
+    <div class="chatbot-notification" id="chatbotNotification">Talk to Agent</div>
+
+    <button class="chatbot-toggle" id="chatbotToggle">Chat</button>
+
+    <div class="cookies-bar" id="cookiesBar">
+        This website uses cookies to ensure you get the best experience. 
+        <button class="accept" onclick="acceptCookies()">Accept</button>
+        <button class="decline" onclick="declineCookies()">Decline</button>
+    </div>
+
+    <script>
+        function sendMessage() {
+            const input = document.getElementById('chatbotInput');
+            const messages = document.getElementById('chatbotMessages');
+
+            if (input.value.trim() !== '') {
+                // Add user message
+                const userMessage = document.createElement('div');
+                userMessage.textContent = input.value;
+                userMessage.style.textAlign = 'right';
+                userMessage.style.margin = '5px 0';
+                messages.appendChild(userMessage);
+
+                // Add bot response
+                const botMessage = document.createElement('div');
+                botMessage.textContent = 'This is a bot response.';
+                botMessage.style.textAlign = 'left';
+                botMessage.style.margin = '5px 0';
+                messages.appendChild(botMessage);
+
+                // Clear input
+                input.value = '';
+
+                // Scroll to the bottom
+                messages.scrollTop = messages.scrollHeight;
+            }
+        }
+
+        function chatbotOption(option) {
+            const messages = document.getElementById('chatbotMessages');
+
+            // Add user-selected option as a message
+            const userMessage = document.createElement('div');
+            userMessage.textContent = option;
+            userMessage.style.textAlign = 'right';
+            userMessage.style.margin = '5px 0';
+            messages.appendChild(userMessage);
+
+            // Add bot response based on the option
+            const botMessage = document.createElement('div');
+            if (option === 'How to log in?') {
+                botMessage.textContent = 'Thanks for logging in to our website';
+            } else if (option === 'How to log out?') {
+                botMessage.textContent = 'To log out, click the Logout button in the menu bar.';
+            } else if (option === 'How to reset password?') {
+                botMessage.textContent = 'To reset your password, click the Forgot Password link on the login page and follow the instructions.';
+            }
+            botMessage.style.textAlign = 'left';
+            botMessage.style.margin = '5px 0';
+            messages.appendChild(botMessage);
+
+            // Scroll to the bottom
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        const chatbotContainer = document.querySelector('.chatbot-container');
+        const chatbotNotification = document.getElementById('chatbotNotification');
+
+        chatbotContainer.addEventListener('mouseenter', () => {
+            chatbotNotification.style.display = 'block';
+        });
+
+        chatbotContainer.addEventListener('mouseleave', () => {
+            chatbotNotification.style.display = 'none';
+        });
+
+        const chatbotToggle = document.getElementById('chatbotToggle');
+
+        chatbotToggle.addEventListener('click', () => {
+            if (chatbotContainer.style.display === 'none' || chatbotContainer.style.display === '') {
+                chatbotContainer.style.display = 'flex';
+                chatbotToggle.textContent = 'Close Chat';
+            } else {
+                chatbotContainer.style.display = 'none';
+                chatbotToggle.textContent = 'Chat';
+            }
+        });
+
+        function validateLoginForm() {
+            const username = document.querySelector('input[type="text"]').value;
+            const password = document.querySelector('input[type="password"]').value;
+
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(username)) {
+                alert('Please enter a valid email address.');
+                return false;
+            }
+
+            // Password validation
+            if (password.length < 8) {
+                alert('Password must be at least 8 characters long.');
+                return false;
+            }
+
+            if (!/[A-Z]/.test(password)) {
+                alert('Password must contain at least one uppercase letter.');
+                return false;
+            }
+
+            if (!/[a-z]/.test(password)) {
+                alert('Password must contain at least one lowercase letter.');
+                return false;
+            }
+
+            if (!/[0-9]/.test(password)) {
+                alert('Password must contain at least one number.');
+                return false;
+            }
+
+            if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+                alert('Password must contain at least one special character.');
+                return false;
+            }
+
+            return true;
+        }
+
+        function acceptCookies() {
+            const cookiesBar = document.getElementById('cookiesBar');
+            cookiesBar.style.display = 'none';
+            alert('You have accepted cookies.');
+        }
+
+        function declineCookies() {
+            const cookiesBar = document.getElementById('cookiesBar');
+            cookiesBar.style.display = 'none';
+            alert('You have declined cookies.');
+        }
+    </script>
+</body>
+</html>
